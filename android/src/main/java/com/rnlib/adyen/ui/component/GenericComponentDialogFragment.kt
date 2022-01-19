@@ -5,14 +5,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.adyen.checkout.base.ComponentError
-import com.adyen.checkout.base.ComponentView
-import com.adyen.checkout.base.PaymentComponent
-import com.adyen.checkout.base.PaymentComponentState
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.ComponentView
+import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 
-import com.adyen.checkout.base.util.CurrencyUtils
+import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger

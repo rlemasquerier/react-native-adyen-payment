@@ -10,9 +10,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 import android.view.KeyEvent
 import android.widget.FrameLayout
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 import com.rnlib.adyen.R
 import com.adyen.checkout.googlepay.GooglePayConfiguration

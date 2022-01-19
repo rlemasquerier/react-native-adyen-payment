@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.Context
 
-import com.adyen.checkout.base.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -14,7 +14,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.base.model.payments.Amount
+import com.adyen.checkout.components.model.payments.Amount
 import android.util.Log
 import android.widget.Toast
 
@@ -51,8 +51,8 @@ import java.util.Locale
 
 import com.rnlib.adyen.AdyenComponent
 import com.rnlib.adyen.AdyenComponentConfiguration
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration

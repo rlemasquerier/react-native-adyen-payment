@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.base.component.Configuration
-import com.adyen.checkout.base.model.payments.Amount
-import com.adyen.checkout.base.util.CheckoutCurrency
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.CheckoutCurrency
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.api.Environment
