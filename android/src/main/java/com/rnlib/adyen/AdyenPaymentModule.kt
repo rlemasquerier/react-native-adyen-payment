@@ -448,7 +448,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         val cardConfiguration = CardConfiguration.Builder(context, cardComponent.getString("card_public_key"))
                             .setShopperReference(paymentData.getString("shopperReference"))
                             .setShopperLocale(shopperLocale)
-                            .setHolderNameRequire(cardComponent.optBoolean("holderNameRequire"))
+                            .setHolderNameRequired(cardComponent.optBoolean("holderNameRequire"))
                             .setShowStorePaymentField(cardComponent.optBoolean("showStorePaymentField"))
                             .build()
 
