@@ -159,6 +159,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         configData.environment = appServiceConfigJSON.getString("environment")
         configData.base_url = appServiceConfigJSON.getString("base_url")
         configData.app_url_headers = headersMap
+        configData.client_key = appServiceConfigJSON.getString("client_key")
     }
     
     @ReactMethod
@@ -286,7 +287,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showIdealComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val idealConfiguration = IdealConfiguration.Builder(context).build()
+        val idealConfiguration = IdealConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addIdealConfiguration(idealConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -295,7 +296,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showMOLPayComponent(component : String,componentData : JSONObject){
         val context = getReactApplicationContext()
-        val molPayConfiguration = MolpayConfiguration.Builder(context).build()
+        val molPayConfiguration = MolpayConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         when (component){
             PaymentMethodTypes.MOLPAY_MALAYSIA -> configBuilder.addMolpayMalasyaConfiguration(molPayConfiguration)
@@ -308,7 +309,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showDotPayComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val dotPayConfiguration = DotpayConfiguration.Builder(context).build()
+        val dotPayConfiguration = DotpayConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addDotpayConfiguration(dotPayConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -317,7 +318,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showEPSComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val epsConfiguration = EPSConfiguration.Builder(context).build()
+        val epsConfiguration = EPSConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addEpsConfiguration(epsConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -326,7 +327,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showEnterCashComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val enterCashConfiguration = EntercashConfiguration.Builder(context).build()
+        val enterCashConfiguration = EntercashConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addEntercashConfiguration(enterCashConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -335,7 +336,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showOpenBankingComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val openBankingConfiguration = OpenBankingConfiguration.Builder(context).build()
+        val openBankingConfiguration = OpenBankingConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addOpenBankingConfiguration(openBankingConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -344,7 +345,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showSEPAComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val sepaConfiguration = SepaConfiguration.Builder(context).build()
+        val sepaConfiguration = SepaConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addSepaConfiguration(sepaConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
