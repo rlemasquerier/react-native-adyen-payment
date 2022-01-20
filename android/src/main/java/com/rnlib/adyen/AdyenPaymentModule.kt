@@ -61,7 +61,6 @@ import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayConfiguration
-import com.adyen.checkout.afterpay.AfterPayConfiguration
 
 import com.google.android.gms.wallet.WalletConstants
 
@@ -406,23 +405,6 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
     }
 
-    private fun showAfterPayComponent(componentData : JSONObject){
-        val context = getReactApplicationContext()
-        var afterPayConfig : AfterPayConfiguration? = null
-        if(componentData.length() != 0){
-            afterPayConfig =  when (componentData.getString("countryCode")) {
-                "NL" -> {AfterPayConfiguration.Builder(context, AfterPayConfiguration.CountryCode.NL).build()}
-                "BE" -> {AfterPayConfiguration.Builder(context, AfterPayConfiguration.CountryCode.BE).build()}
-                else -> null
-            }   
-        }
-        if(afterPayConfig != null){
-            val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
-            configBuilder.addAfterPayConfiguration(afterPayConfig)
-            AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
-        }
-    }
- 
     private fun showDropInComponent(componentData : JSONObject) {
 
         Log.d(TAG, "startDropIn")
@@ -460,17 +442,6 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
                                 .build()
         }
 
-        val afterPayComponent : JSONObject = if(componentData.has(PaymentMethodTypes.AFTER_PAY))  componentData.getJSONObject(PaymentMethodTypes.AFTER_PAY) else JSONObject()
-        var afterPayConfiguration : AfterPayConfiguration? = null
-        if(afterPayComponent.length() != 0){
-            afterPayConfiguration =  when (afterPayComponent.getString("countryCode")) {
-                "NL" -> {AfterPayConfiguration.Builder(context, AfterPayConfiguration.CountryCode.NL).setShopperLocale(shopperLocale).build()}
-                "BE" -> {AfterPayConfiguration.Builder(context, AfterPayConfiguration.CountryCode.BE).setShopperLocale(shopperLocale).build()}
-                else -> null
-            }   
-            
-        }
-
         /*
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addCardConfiguration(cardConfiguration)
@@ -494,10 +465,6 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
 
         if((bcmcComponent.length() != 0) && bcmcConfiguration != null){
           dropInConfigurationBuilder.addBcmcConfiguration(bcmcConfiguration)
-        }
-
-        if((afterPayComponent.length() != 0) && afterPayConfiguration != null){
-            dropInConfigurationBuilder.addAfterPayConfiguration(afterPayConfiguration)
         }
 
         when (configData.environment) {
