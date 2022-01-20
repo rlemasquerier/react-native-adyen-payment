@@ -16,7 +16,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.util.LocaleUtil
-import com.adyen.checkout.core.util.ParcelUtils
 import com.adyen.checkout.dotpay.DotpayConfiguration
 
 import com.rnlib.adyen.AdyenComponentConfiguration.Builder
@@ -83,7 +82,7 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
     }
 
     override fun describeContents(): Int {
-        return ParcelUtils.NO_FILE_DESCRIPTOR
+        return Parcelable.CONTENTS_FILE_DESCRIPTOR;
     }
 
     fun <T : Configuration> getConfigurationFor(@PaymentMethodTypes.SupportedPaymentMethod paymentMethod: String, context: Context): T {
