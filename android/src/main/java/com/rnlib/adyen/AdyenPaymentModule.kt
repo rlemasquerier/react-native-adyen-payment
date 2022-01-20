@@ -484,11 +484,11 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         */
         val resultIntent = Intent(reactContext as Context, super.getCurrentActivity()!!::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        
+
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             super.getCurrentActivity() as Context,
-            resultIntent,
-            AdyenDropInService::class.java
+            AdyenDropInService::class.java,
+            configData.client_key
         ).addCardConfiguration(cardConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
 
@@ -525,7 +525,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         }
 
         val currentActivity = super.getCurrentActivity() ?: return
-        DropIn.startPayment(currentActivity, paymentMethodsApiResponse, dropInConfigurationBuilder.build())
+        DropIn.startPayment(currentActivity, paymentMethodsApiResponse, dropInConfigurationBuilder.build(), resultIntent)
     }
 
     override fun onNewIntent(intent: Intent?) {
