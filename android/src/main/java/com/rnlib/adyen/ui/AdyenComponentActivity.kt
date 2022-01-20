@@ -25,7 +25,6 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.code.Lint
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -87,11 +86,9 @@ class AdyenComponentActivity : AppCompatActivity(), DropInBottomSheetDialogFragm
 
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
-    @Suppress(Lint.PROTECTED_IN_FINAL)
     protected lateinit var actionHandler: ActionHandler
 
     // If a new intent is received we can continue processing, otherwise we might need to time out
-    @Suppress(Lint.PROTECTED_IN_FINAL)
     private var isWaitingResult = false
 
     private val loadingDialog = LoadingDialogFragment.newInstance()
@@ -313,7 +310,6 @@ class AdyenComponentActivity : AppCompatActivity(), DropInBottomSheetDialogFragm
         this.requestPaymentsCall(paymentComponentData)
     }
 
-    @Suppress(Lint.PROTECTED_IN_FINAL)
     protected fun handleCallResult(callResult: CallResult) {
         Logger.d(TAG, "handleCallResult - ${callResult.type.name}")
         when (callResult.type) {
