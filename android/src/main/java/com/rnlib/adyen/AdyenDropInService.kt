@@ -4,7 +4,6 @@ import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils
-import com.adyen.checkout.dropin.service.CallResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.redirect.RedirectComponent
 import com.google.gson.Gson
@@ -17,6 +16,7 @@ import retrofit2.Call
 import java.io.IOException
 import android.util.Log
 import com.adyen.checkout.core.model.toStringPretty
+import com.adyen.checkout.dropin.service.DropInServiceResult
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
@@ -53,7 +53,7 @@ class AdyenDropInService : DropInService() {
             .create(CheckoutApiService::class.java)
     }*/
 
-    override fun makePaymentsCall(paymentComponentData: JSONObject): CallResult {
+    override fun makePaymentsCall(paymentComponentData: JSONObject): DropInServiceResult {
         Log.i(TAG, "makePaymentsCall")
         // Check out the documentation of this method on the parent DropInService class
         /*
@@ -88,7 +88,7 @@ class AdyenDropInService : DropInService() {
         return handleResponse(call)
     }
 
-    override fun makeDetailsCall(actionComponentData: JSONObject): CallResult {
+    override fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult {
         Log.d(TAG, "makeDetailsCall")
 
         Log.i(TAG, "payments/details/ - ${actionComponentData.toStringPretty()}")
@@ -100,7 +100,7 @@ class AdyenDropInService : DropInService() {
     }
 
     @Suppress("NestedBlockDepth")
-    private fun handleResponse(call: Call<ResponseBody>): CallResult {
+    private fun handleResponse(call: Call<ResponseBody>): DropInServiceResult {
         return try {
             val response = call.execute()
 
@@ -113,13 +113,13 @@ class AdyenDropInService : DropInService() {
 
             if (response.isSuccessful) {
                 if (detailsResponse.has("action")) {
-                    CallResult(CallResult.ResultType.ACTION, detailsResponse.get("action").toString())
+                    DropInServiceResult.Action(detailsResponse.get("action").toString())
                 } else {
                     Logger.d(TAG, "Final result - ${detailsResponse.toStringPretty()}")
                     val successObj : JSONObject = JSONObject()
                     successObj.put("resultType","SUCCESS")
                     successObj.put("message",detailsResponse)
-                    CallResult(CallResult.ResultType.FINISHED, successObj.toString())
+                    DropInServiceResult.Finished(successObj.toString())
                     /*
                     var resultCode = ""
                     if (detailsResponse.has("resultCode")) {
@@ -142,7 +142,7 @@ class AdyenDropInService : DropInService() {
                 errObj.put("resultType","ERROR")
                 errObj.put("code","ERROR_GENERAL")
                 errObj.put("message",response.message().toString())
-                CallResult(CallResult.ResultType.FINISHED, errObj.toString())
+                DropInServiceResult.Finished(errObj.toString())
             }
         } catch (e: IOException) {
             Logger.e(TAG, "IOException", e)
@@ -151,7 +151,7 @@ class AdyenDropInService : DropInService() {
             errObj.put("resultType","ERROR")
             errObj.put("code","ERROR_IOEXCEPTION")
             errObj.put("message","Unable to Connect to the Server")
-            CallResult(CallResult.ResultType.FINISHED, errObj.toString())
+            DropInServiceResult.Finished(errObj.toString())
         }
     }
 }
