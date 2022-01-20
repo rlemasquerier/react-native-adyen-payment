@@ -523,9 +523,9 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         } catch (e: CheckoutException) {
             Log.e(TAG, "Amount $amount not valid", e)
         }
-        
-        DropIn.startPayment(super.getCurrentActivity() as Context, paymentMethodsApiResponse, dropInConfigurationBuilder.build())
-        
+
+        val currentActivity = super.getCurrentActivity() ?: return
+        DropIn.startPayment(currentActivity, paymentMethodsApiResponse, dropInConfigurationBuilder.build())
     }
 
     override fun onNewIntent(intent: Intent?) {
