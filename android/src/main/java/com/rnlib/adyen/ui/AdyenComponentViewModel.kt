@@ -59,12 +59,7 @@ class AdyenComponentViewModel(application: Application) : AndroidViewModel(appli
             } else if (isSupported(type)) {
                 checkComponentAvailability(getApplication(), paymentMethod, adyenComponentConfiguration, this)
             } else {
-                if (!requiresDetails(paymentMethod)) {
-                    Logger.d(TAG, "No details required - $type")
-                    addPaymentMethod(paymentMethod)
-                } else {
-                    Logger.e(TAG, "PaymentMethod not yet supported - $type")
-                }
+                addPaymentMethod(paymentMethod)
             }
         }
     }
@@ -78,19 +73,6 @@ class AdyenComponentViewModel(application: Application) : AndroidViewModel(appli
 
         return PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethodType)
     }
-
-    private fun requiresDetails(paymentMethod: PaymentMethod): Boolean {
-        // If details is empty or all optional, we can call payments directly.
-        paymentMethod.details?.let {
-            for (inputDetail in it) {
-                if (!inputDetail.isOptional) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-    
 
     private fun addPaymentMethod(paymentMethod: PaymentMethod) {
         if (paymentMethod is StoredPaymentMethod) {
