@@ -57,8 +57,9 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
         availableConfigs: Map<String, Configuration>,
         serviceComponentName: ComponentName,
         resultHandlerIntent: Intent,
-        amount: Amount
-    ) : super(shopperLocale, environment) {
+        amount: Amount,
+        clientKey: String
+    ) : super(shopperLocale, environment, clientKey) {
         this.availableConfigs = availableConfigs
         this.serviceComponentName = serviceComponentName
         this.resultHandlerIntent = resultHandlerIntent
@@ -107,6 +108,7 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
 
         private var serviceComponentName: ComponentName
         private var shopperLocale: Locale
+        private var clientKey: String
         private var resultHandlerIntent: Intent
         private var environment: Environment = Environment.EUROPE
         private var amount: Amount = Amount.EMPTY
@@ -129,6 +131,8 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
             this.resultHandlerIntent = resultHandlerIntent
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
             this.shopperLocale = LocaleUtil.getLocale(context)
+            // TODO
+            this.clientKey = "to do"
         }
 
         /**
@@ -140,6 +144,7 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
 
             this.serviceComponentName = adyenComponentConfiguration.serviceComponentName
             this.shopperLocale = adyenComponentConfiguration.shopperLocale
+            this.clientKey = adyenComponentConfiguration.clientKey
             this.environment = adyenComponentConfiguration.environment
             this.resultHandlerIntent = adyenComponentConfiguration.resultHandlerIntent
             this.amount = adyenComponentConfiguration.amount
@@ -287,7 +292,8 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
                     availableConfigs,
                     serviceComponentName,
                     resultHandlerIntent,
-                    amount
+                    amount,
+                    clientKey
             )
         }
     }
