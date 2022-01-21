@@ -29,7 +29,7 @@ class AdyenComponentViewModel(application: Application) : AndroidViewModel(appli
             if (value != paymentMethodsApiResponse) {
                 field = value
                 if (value.paymentMethods != null) {
-                    onPaymentMethodsResponseChanged(value.paymentMethods.orEmpty() + value.storedPaymentMethods.orEmpty())
+                    onPaymentMethodsResponseChanged((value.paymentMethods.orEmpty() + value.storedPaymentMethods.orEmpty()) as List<PaymentMethod>)
                 }
             }
         }
