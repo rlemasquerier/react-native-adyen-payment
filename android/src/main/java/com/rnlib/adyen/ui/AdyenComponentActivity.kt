@@ -356,12 +356,7 @@ class AdyenComponentActivity : AppCompatActivity(), DropInBottomSheetDialogFragm
         when (intent.action) {
             // Redirect response
             Intent.ACTION_VIEW -> {
-                val data = intent.data
-                if (data != null && data.toString().startsWith(RedirectUtil.REDIRECT_RESULT_SCHEME)) {
-                    actionHandler.handleRedirectResponse(data)
-                } else {
-                    Logger.e(TAG, "Unexpected response from ACTION_VIEW - ${intent.data}")
-                }
+                actionHandler.handleRedirectResponse(intent)
             }
             else -> {
                 Logger.e(TAG, "Unable to find action")

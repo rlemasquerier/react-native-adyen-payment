@@ -83,8 +83,8 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
         }
     }
 
-    fun handleRedirectResponse(data: Uri) {
-        redirectComponent.handleRedirectResponse(data)
+    fun handleRedirectResponse(intent: Intent) {
+        redirectComponent.handleIntent(intent)
     }
 
     fun handleWeChatPayResponse(intent: Intent) {
