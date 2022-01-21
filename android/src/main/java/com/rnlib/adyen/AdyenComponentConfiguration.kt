@@ -86,7 +86,7 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
         return Parcelable.CONTENTS_FILE_DESCRIPTOR;
     }
 
-    fun <T : Configuration> getConfigurationFor(@PaymentMethodTypes.SupportedPaymentMethod paymentMethod: String, context: Context): T {
+    fun <T : Configuration> getConfigurationFor(paymentMethod: String, context: Context): T {
         return if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod) && availableConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
             availableConfigs[paymentMethod] as T
