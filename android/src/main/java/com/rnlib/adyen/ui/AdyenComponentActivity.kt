@@ -348,11 +348,6 @@ class AdyenComponentActivity : AppCompatActivity(), DropInBottomSheetDialogFragm
         Logger.d(TAG, "handleIntent: action - ${intent.action}")
         isWaitingResult = false
 
-        if (WeChatPayUtils.isResultIntent(intent)) {
-            Logger.d(TAG, "isResultIntent")
-            actionHandler.handleWeChatPayResponse(intent)
-        }
-
         when (intent.action) {
             // Redirect response
             Intent.ACTION_VIEW -> {

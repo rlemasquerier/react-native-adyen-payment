@@ -42,12 +42,10 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
 
     private val redirectComponent = RedirectComponent.PROVIDER.get(activity, activity.application, redirectConfiguration)
     private val adyen3DS2Component = Adyen3DS2Component.PROVIDER.get(activity, activity.application, adyen3DS2Configuration)
-    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(activity)
 
     init {
         redirectComponent.observe(activity, this)
         adyen3DS2Component.observe(activity, this)
-        weChatPayActionComponent.observe(activity, this)
 
         redirectComponent.observeErrors(activity, Observer {
             callback.onError(it?.errorMessage ?: "Redirect Error.")
@@ -55,9 +53,6 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
 
         adyen3DS2Component.observeErrors(activity, Observer {
             callback.onError(it?.errorMessage ?: "3DS2 Error.")
-        })
-        weChatPayActionComponent.observeErrors(activity, Observer {
-            callback.onError(it?.errorMessage ?: "WechatPay Error.")
         })
     }
 
@@ -85,9 +80,6 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
             adyen3DS2Component.canHandleAction(action) -> {
                 adyen3DS2Component.handleAction(activity, action)
             }
-            weChatPayActionComponent.canHandleAction(action) -> {
-                weChatPayActionComponent.handleAction(activity, action)
-            }
             else -> {
                 Logger.e(TAG, "Unknown Action - ${action.type}")
                 sendResult("$UNKNOWN_ACTION.${action.type}")
@@ -97,10 +89,6 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
 
     fun handleRedirectResponse(intent: Intent) {
         redirectComponent.handleIntent(intent)
-    }
-
-    fun handleWeChatPayResponse(intent: Intent) {
-        weChatPayActionComponent.handleResultIntent(intent)
     }
 
     interface DetailsRequestedInterface {

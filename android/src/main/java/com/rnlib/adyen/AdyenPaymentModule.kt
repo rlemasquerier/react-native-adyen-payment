@@ -60,7 +60,6 @@ import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayConfiguration
 
 import com.google.android.gms.wallet.WalletConstants
 
@@ -213,7 +212,6 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
                             PaymentMethodTypes.OPEN_BANKING -> showOpenBankingComponent(compData)
                             PaymentMethodTypes.SEPA -> showSEPAComponent(compData)
                             PaymentMethodTypes.BCMC -> showBCMCComponent(compData)
-                            PaymentMethodTypes.WECHAT_PAY_SDK -> showWeChatPayComponent(component,compData)
                             PaymentMethodTypes.AFTER_PAY -> showAfterPayComponent(compData)
                             else -> {
                                 val evtObj : JSONObject = JSONObject()
@@ -270,17 +268,6 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
             Log.e(TAG, "Amount not valid", e)
         }
         return adyenConfigurationBuilder
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    private fun showWeChatPayComponent(component : String,componentData : JSONObject){
-        val context = getReactApplicationContext()
-        val wechatPayConfiguration = WeChatPayConfiguration.Builder(context).build()
-        val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
-        when (component){
-            PaymentMethodTypes.WECHAT_PAY_SDK -> configBuilder.addWeChatPaySDKConfiguration(wechatPayConfiguration)
-        }
-        AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
     }
 
     @Suppress("UNUSED_PARAMETER")

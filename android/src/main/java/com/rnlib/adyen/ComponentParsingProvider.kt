@@ -53,8 +53,6 @@ import com.adyen.checkout.openbanking.OpenBankingRecyclerView
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.SepaView
-import com.adyen.checkout.wechatpay.WeChatPayComponent
-import com.adyen.checkout.wechatpay.WeChatPayConfiguration
 
 class ComponentParsingProvider {
     companion object {
@@ -100,9 +98,6 @@ internal fun <T : Configuration> getDefaultConfigFor(
         }
         PaymentMethodTypes.SEPA -> {
             SepaConfiguration.Builder(context)
-        }
-        PaymentMethodTypes.WECHAT_PAY_SDK -> {
-            WeChatPayConfiguration.Builder(context)
         }
         else -> {
             throw CheckoutException("Unable to find component configuration for type - $paymentMethod")
@@ -151,7 +146,6 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         PaymentMethodTypes.GOOGLE_PAY -> GooglePayComponent.PROVIDER
         PaymentMethodTypes.SEPA -> SepaComponent.PROVIDER
         PaymentMethodTypes.BCMC -> BcmcComponent.PROVIDER
-        PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayComponent.PROVIDER
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
@@ -221,10 +215,6 @@ internal fun getComponentFor(
         PaymentMethodTypes.BCMC -> {
             val bcmcConfiguration: BcmcConfiguration = adyenComponentConfiguration.getConfigurationFor(PaymentMethodTypes.BCMC, context)
             BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
-        }
-        PaymentMethodTypes.WECHAT_PAY_SDK -> {
-            val weChatPayConfiguration: WeChatPayConfiguration = adyenComponentConfiguration.getConfigurationFor(PaymentMethodTypes.WECHAT_PAY_SDK, context)
-            WeChatPayComponent.PROVIDER.get(fragment, paymentMethod, weChatPayConfiguration)
         }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
