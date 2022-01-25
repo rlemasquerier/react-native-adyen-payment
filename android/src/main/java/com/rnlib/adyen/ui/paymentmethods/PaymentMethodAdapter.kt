@@ -77,7 +77,7 @@ class PaymentMethodAdapter(
                 }
 
                 var txVariant = when (paymentMethod.type) {
-                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) paymentMethod.brand else CARD_LOGO_TYPE
+                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) (paymentMethod as StoredPaymentMethod).brand else CARD_LOGO_TYPE
                     else -> paymentMethod.type!!
                 }
 

@@ -79,7 +79,7 @@ class AdyenComponentViewModel(application: Application) : AndroidViewModel(appli
             if (paymentMethod.isEcommerce) {
                 paymentMethodsModel.storedPaymentMethods.add(paymentMethod)
             } else {
-                Logger.d(TAG, "Stored method ${paymentMethod.type} is not Ecommerce")
+                Logger.d(TAG, "Stored method ${(paymentMethod as StoredPaymentMethod).type} is not Ecommerce")
             }
         } else {
             paymentMethodsModel.paymentMethods.add(paymentMethod)
