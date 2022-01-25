@@ -76,27 +76,27 @@ internal fun <T : Configuration> getDefaultConfigFor(
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (paymentMethod) {
         PaymentMethodTypes.IDEAL -> {
-            IdealConfiguration.Builder(context)
+            IdealConfiguration.Builder(context, "TODO: client key")
         }
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> {
-            MolpayConfiguration.Builder(context)
+            MolpayConfiguration.Builder(context, "TODO: client key")
         }
         PaymentMethodTypes.EPS -> {
-            EPSConfiguration.Builder(context)
+            EPSConfiguration.Builder(context, "TODO: client key")
         }
         PaymentMethodTypes.OPEN_BANKING -> {
-            OpenBankingConfiguration.Builder(context)
+            OpenBankingConfiguration.Builder(context, "TODO: client key")
         }
         PaymentMethodTypes.DOTPAY -> {
-            DotpayConfiguration.Builder(context)
+            DotpayConfiguration.Builder(context, "TODO: client key")
         }
         PaymentMethodTypes.ENTERCASH -> {
-            EntercashConfiguration.Builder(context)
+            EntercashConfiguration.Builder(context, "TODO: client key")
         }
         PaymentMethodTypes.SEPA -> {
-            SepaConfiguration.Builder(context)
+            SepaConfiguration.Builder(context, "TODO: client key")
         }
         else -> {
             throw CheckoutException("Unable to find component configuration for type - $paymentMethod")
