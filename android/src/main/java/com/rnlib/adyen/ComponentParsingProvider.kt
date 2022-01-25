@@ -62,7 +62,6 @@ class ComponentParsingProvider {
 
 @Suppress("ComplexMethod")
 internal fun <T : Configuration> getDefaultConfigFor(
-    @PaymentMethodTypes.SupportedPaymentMethod
     paymentMethod: String,
     context: Context,
     adyenComponentConfiguration: AdyenComponentConfiguration
