@@ -131,7 +131,7 @@ internal fun checkComponentAvailability(
 }
 
 @Suppress("ComplexMethod")
-internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent<*>, Configuration> {
+internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent<*,*>, Configuration> {
     @Suppress("UNCHECKED_CAST")
     return when (type) {
         PaymentMethodTypes.IDEAL -> IdealComponent.PROVIDER 
@@ -149,7 +149,7 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
-    } as PaymentComponentProvider<PaymentComponent<*>, Configuration>
+    } as PaymentComponentProvider<PaymentComponent<*,*>, Configuration>
 }
 
 /**
@@ -164,7 +164,7 @@ internal fun getComponentFor(
     fragment: Fragment,
     paymentMethod: PaymentMethod,
     adyenComponentConfiguration: AdyenComponentConfiguration
-): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>> {
+): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>,*> {
     val context = fragment.requireContext()
 
     val component = when (paymentMethod.type) {
@@ -221,7 +221,7 @@ internal fun getComponentFor(
         }
     }
     component.setCreatedForDropIn()
-    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
+    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>,*>
 }
 
 /**
@@ -234,7 +234,7 @@ internal fun getComponentFor(
 internal fun getViewFor(
     context: Context,
     paymentMethod: PaymentMethod
-): ComponentView<PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>> {
+): ComponentView<*,*> {
     @Suppress("UNCHECKED_CAST")
     return when (paymentMethod.type) {
         PaymentMethodTypes.IDEAL -> IdealRecyclerView(context)
@@ -252,5 +252,5 @@ internal fun getViewFor(
         else -> {
             throw CheckoutException("Unable to find view for type - ${paymentMethod.type}")
         }
-    } as ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
+    }
 }

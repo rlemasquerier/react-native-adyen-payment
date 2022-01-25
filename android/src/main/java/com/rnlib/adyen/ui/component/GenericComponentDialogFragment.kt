@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.frag_generic_component.view.header
 class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
     
-    private lateinit var componentView: ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
+    private lateinit var componentView: ComponentView<*,*>
 
     companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java) {
         private val TAG = LogUtil.getTag()
@@ -68,8 +68,8 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     private fun attachComponent(
-        component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>,
-        componentView: ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
+        component: PaymentComponent<*,*>,
+        componentView: ComponentView<*,*>
     ) {
         component.observe(this, this)
         component.observeErrors(this, createErrorHandlerObserver())
