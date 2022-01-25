@@ -144,7 +144,7 @@ internal fun getComponentFor(
     fragment: Fragment,
     paymentMethod: PaymentMethod,
     adyenComponentConfiguration: AdyenComponentConfiguration
-): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>,*> {
+): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>,Configuration> {
     val context = fragment.requireContext()
 
     val component = when (paymentMethod.type) {
@@ -201,7 +201,7 @@ internal fun getComponentFor(
         }
     }
     component.setCreatedForDropIn()
-    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>,*>
+    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
 }
 
 /**
