@@ -13,7 +13,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
 import com.rnlib.adyen.AdyenComponentConfiguration
-import com.rnlib.adyen.checkComponentAvailability
 import com.rnlib.adyen.ui.paymentmethods.PaymentMethodsModel
 
 class AdyenComponentViewModel(application: Application) : AndroidViewModel(application), ComponentAvailableCallback<Configuration> {
@@ -56,8 +55,6 @@ class AdyenComponentViewModel(application: Application) : AndroidViewModel(appli
 
             if (type == null) {
                 Logger.e(TAG, "PaymentMethod type is null")
-            } else if (isSupported(type)) {
-                checkComponentAvailability(getApplication(), paymentMethod, adyenComponentConfiguration, this)
             } else {
                 addPaymentMethod(paymentMethod)
             }

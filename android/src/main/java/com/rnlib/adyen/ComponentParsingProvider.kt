@@ -110,25 +110,6 @@ internal fun <T : Configuration> getDefaultConfigFor(
     return builder.build() as T
 }
 
-internal fun checkComponentAvailability(
-    application: Application,
-    paymentMethod: PaymentMethod,
-    adyenComponentConfiguration: AdyenComponentConfiguration,
-    callback: ComponentAvailableCallback<in Configuration>
-) {
-    try {
-        val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod is null")
-
-        val provider = getProviderForType(type)
-        val configuration = adyenComponentConfiguration.getConfigurationFor<Configuration>(type, application)
-
-        provider.isAvailable(application, paymentMethod, configuration, callback)
-    } catch (e: CheckoutException) {
-        Logger.e(ComponentParsingProvider.TAG, "Unable to initiate ${paymentMethod.type}", e)
-        callback.onAvailabilityResult(false, paymentMethod, null)
-    }
-}
-
 @Suppress("ComplexMethod")
 internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent<*,*>, Configuration> {
     @Suppress("UNCHECKED_CAST")
