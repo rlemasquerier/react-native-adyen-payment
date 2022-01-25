@@ -110,28 +110,6 @@ internal fun <T : Configuration> getDefaultConfigFor(
     return builder.build() as T
 }
 
-@Suppress("ComplexMethod")
-internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent<*,*>, Configuration> {
-    @Suppress("UNCHECKED_CAST")
-    return when (type) {
-        PaymentMethodTypes.IDEAL -> IdealComponent.PROVIDER 
-        PaymentMethodTypes.MOLPAY_THAILAND,
-        PaymentMethodTypes.MOLPAY_MALAYSIA,
-        PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayComponent.PROVIDER
-        PaymentMethodTypes.EPS -> EPSComponent.PROVIDER
-        PaymentMethodTypes.OPEN_BANKING -> OpenBankingComponent.PROVIDER
-        PaymentMethodTypes.DOTPAY -> DotpayComponent.PROVIDER
-        PaymentMethodTypes.ENTERCASH -> EntercashComponent.PROVIDER
-        PaymentMethodTypes.SCHEME -> CardComponent.PROVIDER
-        PaymentMethodTypes.GOOGLE_PAY -> GooglePayComponent.PROVIDER
-        PaymentMethodTypes.SEPA -> SepaComponent.PROVIDER
-        PaymentMethodTypes.BCMC -> BcmcComponent.PROVIDER
-        else -> {
-            throw CheckoutException("Unable to find component for type - $type")
-        }
-    } as PaymentComponentProvider<PaymentComponent<*,*>, Configuration>
-}
-
 /**
  * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [PaymentMethod] reference.
  *
