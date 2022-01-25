@@ -52,13 +52,14 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         dialog.setOnShowListener { dialog ->
             val bottomSheet = (dialog as BottomSheetDialog)
                     .findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            if (bottomSheet != null) {
+                val behavior = BottomSheetBehavior.from(bottomSheet)
 
-            var behavior = BottomSheetBehavior.from(bottomSheet)
+                if (this.dialogInitViewState == BottomSheetBehavior.STATE_EXPANDED)
+                    behavior.skipCollapsed = true
 
-            if (this.dialogInitViewState == BottomSheetBehavior.STATE_EXPANDED)
-                behavior.skipCollapsed = true
-
-            behavior.state = this.dialogInitViewState
+                behavior.state = this.dialogInitViewState
+            }
         }
 
         return dialog
