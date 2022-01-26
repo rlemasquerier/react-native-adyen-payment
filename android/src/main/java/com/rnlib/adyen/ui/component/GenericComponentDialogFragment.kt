@@ -5,14 +5,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.adyen.checkout.base.ComponentError
-import com.adyen.checkout.base.ComponentView
-import com.adyen.checkout.base.PaymentComponent
-import com.adyen.checkout.base.PaymentComponentState
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.ComponentView
+import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 
-import com.adyen.checkout.base.util.CurrencyUtils
+import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.frag_generic_component.view.header
 class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
     
-    private lateinit var componentView: ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
+    private lateinit var componentView: ComponentView<*,*>
 
     companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java) {
         private val TAG = LogUtil.getTag()
@@ -68,8 +68,8 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     private fun attachComponent(
-        component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>,
-        componentView: ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
+        component: PaymentComponent<*,*>,
+        componentView: ComponentView<*,*>
     ) {
         component.observe(this, this)
         component.observeErrors(this, createErrorHandlerObserver())

@@ -14,11 +14,14 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
-import com.adyen.checkout.base.ActionComponentData
-import com.adyen.checkout.base.model.payments.response.Action
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 
 class ActionHandler(activity: FragmentActivity, private val callback: DetailsRequestedInterface) : Observer<ActionComponentData> {
@@ -28,14 +31,21 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
         const val UNKNOWN_ACTION = "UNKNOWN ACTION"
     }
 
-    private val redirectComponent = RedirectComponent.PROVIDER.get(activity)
-    private val adyen3DS2Component = Adyen3DS2Component.PROVIDER.get(activity)
-    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(activity)
+    // TODO client key handling
+    // TODO handle environment correctly
+    private val redirectConfiguration = RedirectConfiguration.Builder(activity, "TODO")
+        .setEnvironment(Environment.TEST)
+        .build()
+    private val adyen3DS2Configuration = Adyen3DS2Configuration.Builder(activity, "TODO")
+        .setEnvironment(Environment.TEST)
+        .build()
+
+    private val redirectComponent = RedirectComponent.PROVIDER.get(activity, activity.application, redirectConfiguration)
+    private val adyen3DS2Component = Adyen3DS2Component.PROVIDER.get(activity, activity.application, adyen3DS2Configuration)
 
     init {
         redirectComponent.observe(activity, this)
         adyen3DS2Component.observe(activity, this)
-        weChatPayActionComponent.observe(activity, this)
 
         redirectComponent.observeErrors(activity, Observer {
             callback.onError(it?.errorMessage ?: "Redirect Error.")
@@ -43,9 +53,6 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
 
         adyen3DS2Component.observeErrors(activity, Observer {
             callback.onError(it?.errorMessage ?: "3DS2 Error.")
-        })
-        weChatPayActionComponent.observeErrors(activity, Observer {
-            callback.onError(it?.errorMessage ?: "WechatPay Error.")
         })
     }
 
@@ -73,9 +80,6 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
             adyen3DS2Component.canHandleAction(action) -> {
                 adyen3DS2Component.handleAction(activity, action)
             }
-            weChatPayActionComponent.canHandleAction(action) -> {
-                weChatPayActionComponent.handleAction(activity, action)
-            }
             else -> {
                 Logger.e(TAG, "Unknown Action - ${action.type}")
                 sendResult("$UNKNOWN_ACTION.${action.type}")
@@ -83,12 +87,8 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
         }
     }
 
-    fun handleRedirectResponse(data: Uri) {
-        redirectComponent.handleRedirectResponse(data)
-    }
-
-    fun handleWeChatPayResponse(intent: Intent) {
-        weChatPayActionComponent.handleResultIntent(intent)
+    fun handleRedirectResponse(intent: Intent) {
+        redirectComponent.handleIntent(intent)
     }
 
     interface DetailsRequestedInterface {

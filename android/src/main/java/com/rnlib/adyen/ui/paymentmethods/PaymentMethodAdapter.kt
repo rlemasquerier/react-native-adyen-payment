@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import com.adyen.checkout.base.api.ImageLoader
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.base.util.DateUtils
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.util.DateUtils
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.rnlib.adyen.R
 
@@ -77,7 +77,7 @@ class PaymentMethodAdapter(
                 }
 
                 var txVariant = when (paymentMethod.type) {
-                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) paymentMethod.brand else CARD_LOGO_TYPE
+                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) (paymentMethod as StoredPaymentMethod).brand else CARD_LOGO_TYPE
                     else -> paymentMethod.type!!
                 }
 

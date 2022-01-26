@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.base.component.Configuration
-import com.adyen.checkout.base.model.payments.Amount
-import com.adyen.checkout.base.util.CheckoutCurrency
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.CheckoutCurrency
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.api.Environment
@@ -16,7 +16,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.util.LocaleUtil
-import com.adyen.checkout.core.util.ParcelUtils
 import com.adyen.checkout.dotpay.DotpayConfiguration
 
 import com.rnlib.adyen.AdyenComponentConfiguration.Builder
@@ -28,8 +27,6 @@ import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayConfiguration
-import com.adyen.checkout.afterpay.AfterPayConfiguration
 import java.util.Locale
 
 /**
@@ -59,8 +56,9 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
         availableConfigs: Map<String, Configuration>,
         serviceComponentName: ComponentName,
         resultHandlerIntent: Intent,
-        amount: Amount
-    ) : super(shopperLocale, environment) {
+        amount: Amount,
+        clientKey: String
+    ) : super(shopperLocale, environment, clientKey) {
         this.availableConfigs = availableConfigs
         this.serviceComponentName = serviceComponentName
         this.resultHandlerIntent = resultHandlerIntent
@@ -84,10 +82,10 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
     }
 
     override fun describeContents(): Int {
-        return ParcelUtils.NO_FILE_DESCRIPTOR
+        return Parcelable.CONTENTS_FILE_DESCRIPTOR;
     }
 
-    fun <T : Configuration> getConfigurationFor(@PaymentMethodTypes.SupportedPaymentMethod paymentMethod: String, context: Context): T {
+    fun <T : Configuration> getConfigurationFor(paymentMethod: String, context: Context): T {
         return if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod) && availableConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
             availableConfigs[paymentMethod] as T
@@ -109,6 +107,7 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
 
         private var serviceComponentName: ComponentName
         private var shopperLocale: Locale
+        private var clientKey: String
         private var resultHandlerIntent: Intent
         private var environment: Environment = Environment.EUROPE
         private var amount: Amount = Amount.EMPTY
@@ -131,6 +130,8 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
             this.resultHandlerIntent = resultHandlerIntent
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
             this.shopperLocale = LocaleUtil.getLocale(context)
+            // TODO
+            this.clientKey = "to do"
         }
 
         /**
@@ -142,6 +143,7 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
 
             this.serviceComponentName = adyenComponentConfiguration.serviceComponentName
             this.shopperLocale = adyenComponentConfiguration.shopperLocale
+            this.clientKey = adyenComponentConfiguration.clientKey
             this.environment = adyenComponentConfiguration.environment
             this.resultHandlerIntent = adyenComponentConfiguration.resultHandlerIntent
             this.amount = adyenComponentConfiguration.amount
@@ -272,22 +274,6 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Add configuration for WeChatPaySDK payment method.
-         */
-        fun addWeChatPaySDKConfiguration(wechatPayConfiguration: WeChatPayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.WECHAT_PAY_SDK] = wechatPayConfiguration
-            return this
-        }
-
-        /**
-         * Add configuration for Sepa payment method.
-         */
-        fun addAfterPayConfiguration(afterPayConfiguration: AfterPayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.AFTER_PAY] = afterPayConfiguration
-            return this
-        }
-
-        /**
          * Create the [DropInConfiguration] instance.
          */
         fun build(): AdyenComponentConfiguration {
@@ -297,7 +283,8 @@ class AdyenComponentConfiguration : Configuration, Parcelable {
                     availableConfigs,
                     serviceComponentName,
                     resultHandlerIntent,
-                    amount
+                    amount,
+                    clientKey
             )
         }
     }

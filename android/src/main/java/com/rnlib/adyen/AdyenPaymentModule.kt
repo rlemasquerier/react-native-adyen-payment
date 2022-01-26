@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.Context
 
-import com.adyen.checkout.base.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -14,7 +14,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.base.model.payments.Amount
+import com.adyen.checkout.components.model.payments.Amount
 import android.util.Log
 import android.widget.Toast
 
@@ -51,8 +51,8 @@ import java.util.Locale
 
 import com.rnlib.adyen.AdyenComponent
 import com.rnlib.adyen.AdyenComponentConfiguration
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
@@ -60,8 +60,6 @@ import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayConfiguration
-import com.adyen.checkout.afterpay.AfterPayConfiguration
 
 import com.google.android.gms.wallet.WalletConstants
 
@@ -159,6 +157,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         configData.environment = appServiceConfigJSON.getString("environment")
         configData.base_url = appServiceConfigJSON.getString("base_url")
         configData.app_url_headers = headersMap
+        configData.client_key = appServiceConfigJSON.getString("client_key")
     }
     
     @ReactMethod
@@ -213,8 +212,6 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
                             PaymentMethodTypes.OPEN_BANKING -> showOpenBankingComponent(compData)
                             PaymentMethodTypes.SEPA -> showSEPAComponent(compData)
                             PaymentMethodTypes.BCMC -> showBCMCComponent(compData)
-                            PaymentMethodTypes.WECHAT_PAY_SDK -> showWeChatPayComponent(component,compData)
-                            PaymentMethodTypes.AFTER_PAY -> showAfterPayComponent(compData)
                             else -> {
                                 val evtObj : JSONObject = JSONObject()
                                 evtObj.put("code","ERROR_UNKNOWN_PAYMENT_METHOD")
@@ -273,20 +270,9 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun showWeChatPayComponent(component : String,componentData : JSONObject){
-        val context = getReactApplicationContext()
-        val wechatPayConfiguration = WeChatPayConfiguration.Builder(context).build()
-        val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
-        when (component){
-            PaymentMethodTypes.WECHAT_PAY_SDK -> configBuilder.addWeChatPaySDKConfiguration(wechatPayConfiguration)
-        }
-        AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
-    }
-
-    @Suppress("UNUSED_PARAMETER")
     private fun showIdealComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val idealConfiguration = IdealConfiguration.Builder(context).build()
+        val idealConfiguration = IdealConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addIdealConfiguration(idealConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -295,7 +281,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showMOLPayComponent(component : String,componentData : JSONObject){
         val context = getReactApplicationContext()
-        val molPayConfiguration = MolpayConfiguration.Builder(context).build()
+        val molPayConfiguration = MolpayConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         when (component){
             PaymentMethodTypes.MOLPAY_MALAYSIA -> configBuilder.addMolpayMalasyaConfiguration(molPayConfiguration)
@@ -308,7 +294,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showDotPayComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val dotPayConfiguration = DotpayConfiguration.Builder(context).build()
+        val dotPayConfiguration = DotpayConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addDotpayConfiguration(dotPayConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -317,7 +303,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showEPSComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val epsConfiguration = EPSConfiguration.Builder(context).build()
+        val epsConfiguration = EPSConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addEpsConfiguration(epsConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -326,7 +312,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showEnterCashComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val enterCashConfiguration = EntercashConfiguration.Builder(context).build()
+        val enterCashConfiguration = EntercashConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addEntercashConfiguration(enterCashConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -335,7 +321,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showOpenBankingComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val openBankingConfiguration = OpenBankingConfiguration.Builder(context).build()
+        val openBankingConfiguration = OpenBankingConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addOpenBankingConfiguration(openBankingConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -344,7 +330,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
     @Suppress("UNUSED_PARAMETER")
     private fun showSEPAComponent(componentData : JSONObject){
         val context = getReactApplicationContext()
-        val sepaConfiguration = SepaConfiguration.Builder(context).build()
+        val sepaConfiguration = SepaConfiguration.Builder(context, configData.client_key).build()
         val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
         configBuilder.addSepaConfiguration(sepaConfiguration)
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
@@ -405,23 +391,6 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
     }
 
-    private fun showAfterPayComponent(componentData : JSONObject){
-        val context = getReactApplicationContext()
-        var afterPayConfig : AfterPayConfiguration? = null
-        if(componentData.length() != 0){
-            afterPayConfig =  when (componentData.getString("countryCode")) {
-                "NL" -> {AfterPayConfiguration.Builder(context, AfterPayConfiguration.CountryCode.NL).build()}
-                "BE" -> {AfterPayConfiguration.Builder(context, AfterPayConfiguration.CountryCode.BE).build()}
-                else -> null
-            }   
-        }
-        if(afterPayConfig != null){
-            val configBuilder : AdyenComponentConfiguration.Builder = createConfigurationBuilder(context)
-            configBuilder.addAfterPayConfiguration(afterPayConfig)
-            AdyenComponent.startPayment(context, paymentMethodsApiResponse, configBuilder.build())
-        }
-    }
- 
     private fun showDropInComponent(componentData : JSONObject) {
 
         Log.d(TAG, "startDropIn")
@@ -447,7 +416,7 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         val cardConfiguration = CardConfiguration.Builder(context, cardComponent.getString("card_public_key"))
                             .setShopperReference(paymentData.getString("shopperReference"))
                             .setShopperLocale(shopperLocale)
-                            .setHolderNameRequire(cardComponent.optBoolean("holderNameRequire"))
+                            .setHolderNameRequired(cardComponent.optBoolean("holderNameRequire"))
                             .setShowStorePaymentField(cardComponent.optBoolean("showStorePaymentField"))
                             .build()
 
@@ -457,17 +426,6 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
           bcmcConfiguration = BcmcConfiguration.Builder(context, bcmcComponent.getString("card_public_key"))
                                 .setShopperLocale(shopperLocale)
                                 .build()
-        }
-
-        val afterPayComponent : JSONObject = if(componentData.has(PaymentMethodTypes.AFTER_PAY))  componentData.getJSONObject(PaymentMethodTypes.AFTER_PAY) else JSONObject()
-        var afterPayConfiguration : AfterPayConfiguration? = null
-        if(afterPayComponent.length() != 0){
-            afterPayConfiguration =  when (afterPayComponent.getString("countryCode")) {
-                "NL" -> {AfterPayConfiguration.Builder(context, AfterPayConfiguration.CountryCode.NL).setShopperLocale(shopperLocale).build()}
-                "BE" -> {AfterPayConfiguration.Builder(context, AfterPayConfiguration.CountryCode.BE).setShopperLocale(shopperLocale).build()}
-                else -> null
-            }   
-            
         }
 
         /*
@@ -483,20 +441,16 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         */
         val resultIntent = Intent(reactContext as Context, super.getCurrentActivity()!!::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        
+
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             super.getCurrentActivity() as Context,
-            resultIntent,
-            AdyenDropInService::class.java
+            AdyenDropInService::class.java,
+            configData.client_key
         ).addCardConfiguration(cardConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
 
         if((bcmcComponent.length() != 0) && bcmcConfiguration != null){
           dropInConfigurationBuilder.addBcmcConfiguration(bcmcConfiguration)
-        }
-
-        if((afterPayComponent.length() != 0) && afterPayConfiguration != null){
-            dropInConfigurationBuilder.addAfterPayConfiguration(afterPayConfiguration)
         }
 
         when (configData.environment) {
@@ -522,9 +476,9 @@ class AdyenPaymentModule(private var reactContext : ReactApplicationContext) : R
         } catch (e: CheckoutException) {
             Log.e(TAG, "Amount $amount not valid", e)
         }
-        
-        DropIn.startPayment(super.getCurrentActivity() as Context, paymentMethodsApiResponse, dropInConfigurationBuilder.build())
-        
+
+        val currentActivity = super.getCurrentActivity() ?: return
+        DropIn.startPayment(currentActivity, paymentMethodsApiResponse, dropInConfigurationBuilder.build(), resultIntent)
     }
 
     override fun onNewIntent(intent: Intent?) {

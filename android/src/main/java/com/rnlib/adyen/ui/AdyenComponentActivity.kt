@@ -15,17 +15,16 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import android.text.TextUtils
-import com.adyen.checkout.base.ActionComponentData
-import com.adyen.checkout.base.ComponentError
-import com.adyen.checkout.base.PaymentComponentState
-import com.adyen.checkout.base.model.PaymentMethodsApiResponse
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod
-import com.adyen.checkout.base.model.payments.response.Action
-import com.adyen.checkout.base.util.PaymentMethodTypes
-import com.adyen.checkout.core.code.Lint
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -87,11 +86,9 @@ class AdyenComponentActivity : AppCompatActivity(), DropInBottomSheetDialogFragm
 
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
-    @Suppress(Lint.PROTECTED_IN_FINAL)
     protected lateinit var actionHandler: ActionHandler
 
     // If a new intent is received we can continue processing, otherwise we might need to time out
-    @Suppress(Lint.PROTECTED_IN_FINAL)
     private var isWaitingResult = false
 
     private val loadingDialog = LoadingDialogFragment.newInstance()
@@ -313,7 +310,6 @@ class AdyenComponentActivity : AppCompatActivity(), DropInBottomSheetDialogFragm
         this.requestPaymentsCall(paymentComponentData)
     }
 
-    @Suppress(Lint.PROTECTED_IN_FINAL)
     protected fun handleCallResult(callResult: CallResult) {
         Logger.d(TAG, "handleCallResult - ${callResult.type.name}")
         when (callResult.type) {
@@ -352,20 +348,10 @@ class AdyenComponentActivity : AppCompatActivity(), DropInBottomSheetDialogFragm
         Logger.d(TAG, "handleIntent: action - ${intent.action}")
         isWaitingResult = false
 
-        if (WeChatPayUtils.isResultIntent(intent)) {
-            Logger.d(TAG, "isResultIntent")
-            actionHandler.handleWeChatPayResponse(intent)
-        }
-
         when (intent.action) {
             // Redirect response
             Intent.ACTION_VIEW -> {
-                val data = intent.data
-                if (data != null && data.toString().startsWith(RedirectUtil.REDIRECT_RESULT_SCHEME)) {
-                    actionHandler.handleRedirectResponse(data)
-                } else {
-                    Logger.e(TAG, "Unexpected response from ACTION_VIEW - ${intent.data}")
-                }
+                actionHandler.handleRedirectResponse(intent)
             }
             else -> {
                 Logger.e(TAG, "Unable to find action")

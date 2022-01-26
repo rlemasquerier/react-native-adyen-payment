@@ -5,7 +5,9 @@
      	<activity
             android:name=".ui.AdyenComponentActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AdyenCheckout.Translucent">
+            android:theme="@style/AdyenCheckout.Translucent"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

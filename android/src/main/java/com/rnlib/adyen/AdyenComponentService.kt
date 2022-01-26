@@ -1,6 +1,6 @@
 package com.rnlib.adyen
 
-import com.adyen.checkout.base.model.payments.Amount
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils
@@ -16,6 +16,7 @@ import org.json.*
 import retrofit2.Call
 import java.io.IOException
 import android.util.Log
+import com.adyen.checkout.core.model.toStringPretty
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
@@ -80,7 +81,7 @@ class AdyenComponentService : ComponentService() {
         paymentRequest.put("returnUrl", RedirectComponent.getReturnUrl(applicationContext))
         paymentRequest.put("channel", "Android")
 
-        Log.i(TAG, "paymentComponentData - ${JsonUtils.indent(paymentComponentData)}")
+        Log.i(TAG, "paymentComponentData - ${paymentComponentData.toStringPretty()}")
 
         val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
         val call = ApiService.checkoutApi(configData.base_url).payments(configData.app_url_headers,requestBody)
@@ -90,7 +91,7 @@ class AdyenComponentService : ComponentService() {
     override fun makeDetailsCall(actionComponentData: JSONObject): CallResult {
         Log.d(TAG, "makeDetailsCall")
 
-        Log.i(TAG, "payments/details/ - ${JsonUtils.indent(actionComponentData)}")
+        Log.i(TAG, "payments/details/ - ${actionComponentData.toStringPretty()}")
         val configData : AppServiceConfigData = AdyenPaymentModule.getAppServiceConfigData();
         val requestBody = actionComponentData.toString().toRequestBody(CONTENT_TYPE)
         val call = ApiService.checkoutApi(configData.base_url).details(configData.app_url_headers,requestBody)
@@ -158,7 +159,7 @@ class AdyenComponentService : ComponentService() {
                     if (detailsResponse.has("action")) {
                         CallResult(CallResult.ResultType.ACTION, detailsResponse.get("action").toString())
                     } else {
-                        Logger.d(TAG, "Final result - ${JsonUtils.indent(detailsResponse)}")
+                        Logger.d(TAG, "Final result - ${detailsResponse.toStringPretty()}")
                         val successObj : JSONObject = JSONObject()
                         successObj.put("resultType","SUCCESS")
                         successObj.put("message",detailsResponse)

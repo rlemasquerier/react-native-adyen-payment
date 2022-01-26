@@ -7,11 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.adyen.checkout.base.ComponentError
-import com.adyen.checkout.base.PaymentComponent
-import com.adyen.checkout.base.PaymentComponentState
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -27,7 +28,7 @@ open abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragmen
     }
 
     lateinit var paymentMethod: PaymentMethod
-    lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
+    lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
     lateinit var adyenComponentConfiguration: AdyenComponentConfiguration
 
     open class BaseCompanion<T : BaseComponentDialogFragment>(private var classes: Class<T>) {
